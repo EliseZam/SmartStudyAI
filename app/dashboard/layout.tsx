@@ -60,7 +60,7 @@ export default function DashboardLayout({
           {/* Logo */}
           <div className="h-16 flex items-center px-6 border-b">
             <Link href="/dashboard" className="text-xl font-bold text-primary-600">
-              Capstone Manager
+              SmartStudy AI
             </Link>
           </div>
 

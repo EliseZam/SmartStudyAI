@@ -3,13 +3,12 @@ import Link from 'next/link';
 export default function Home() {
   return (
     <main className="min-h-screen flex flex-col">
-      {/* Navigation */}
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <span className="text-xl font-bold text-primary-600">
-                Capstone Manager
+                SmartStudy AI
               </span>
             </div>
             <div className="flex items-center space-x-4">
@@ -30,23 +29,22 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Hero Section */}
       <section className="flex-1 flex items-center justify-center px-4 py-12">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
-            Manage Your Capstone Project
-            <span className="text-primary-600"> Effortlessly</span>
+            Study Smarter with
+            <span className="text-primary-600"> SmartStudy AI</span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Collaborate with your team, track tasks, and deliver your capstone project on time.
-            Built for students, by students.
+            Create personalized study plans, generate summaries, practice with quizzes,
+            and get AI-powered tutoring support in one place.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/auth/signup"
               className="bg-primary-600 text-white hover:bg-primary-700 px-8 py-3 rounded-lg text-lg font-semibold transition-colors"
             >
-              Start Your Project
+              Start Studying
             </Link>
             <Link
               href="/auth/signin"
@@ -58,44 +56,52 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Section */}
       <section className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-            Everything You Need
+            Everything You Need to Learn Better
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
             <FeatureCard
-              title="Project Management"
-              description="Create projects, set milestones, and track progress from start to finish."
-              icon="📋"
+              title="Study Plans"
+              description="Build structured plans for assignments, exams, and long-term academic goals."
+              icon="🗓️"
             />
             <FeatureCard
-              title="Team Collaboration"
-              description="Invite team members, assign tasks, and communicate effectively."
-              icon="👥"
+              title="AI Summaries"
+              description="Turn notes, readings, and lecture content into clear, concise study summaries."
+              icon="🧠"
             />
             <FeatureCard
-              title="Task Tracking"
-              description="Break down work into tasks, set priorities, and never miss a deadline."
+              title="Adaptive Quizzes"
+              description="Test your understanding with quizzes tailored to your progress and weak areas."
               icon="✅"
             />
           </div>
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="bg-gray-50 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-600">
-          <p>Sample Next.js Project for Capstone Course</p>
-          <p className="text-sm mt-2">Built with Next.js, PostgreSQL, Prisma, and NextAuth.js</p>
+          <p>SmartStudy AI</p>
+          <p className="text-sm mt-2">
+            AI-powered study support for students
+          </p>
         </div>
       </footer>
     </main>
   );
 }
 
-function FeatureCard({ title, description, icon }: { title: string; description: string; icon: string }) {
+function FeatureCard({
+  title,
+  description,
+  icon,
+}: {
+  title: string;
+  description: string;
+  icon: string;
+}) {
   return (
     <div className="bg-gray-50 rounded-xl p-6 text-center hover:shadow-lg transition-shadow">
       <div className="text-4xl mb-4">{icon}</div>

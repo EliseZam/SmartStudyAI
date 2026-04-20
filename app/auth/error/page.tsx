@@ -27,7 +27,7 @@ function ErrorContent() {
     <div className="max-w-md w-full space-y-8 text-center">
       <div>
         <Link href="/" className="block text-center">
-          <span className="text-2xl font-bold text-primary-600">Capstone Manager</span>
+          <span className="text-2xl font-bold text-primary-600">SmartStudy AI</span>
         </Link>
         <h2 className="mt-6 text-3xl font-bold text-gray-900">
           Authentication Error

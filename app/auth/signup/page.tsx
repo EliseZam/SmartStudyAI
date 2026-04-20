@@ -31,7 +31,6 @@ export default function SignUpPage() {
     setErrorMessage('');
     setSuccessMessage('');
 
-    // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
       setErrorMessage('Passwords do not match');
       setIsLoading(false);
@@ -72,11 +71,14 @@ export default function SignUpPage() {
       <div className="max-w-md w-full space-y-8">
         <div>
           <Link href="/" className="block text-center">
-            <span className="text-2xl font-bold text-primary-600">Capstone Manager</span>
+            <span className="text-2xl font-bold text-primary-600">SmartStudy AI</span>
           </Link>
           <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
             Create your account
           </h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Join SmartStudy AI to build study plans, generate summaries, and practice with quizzes.
+          </p>
           <p className="mt-2 text-center text-sm text-gray-600">
             Already have an account?{' '}
             <Link href="/auth/signin" className="font-medium text-primary-600 hover:text-primary-500">
@@ -112,7 +114,7 @@ export default function SignUpPage() {
                   value={formData.firstName}
                   onChange={handleChange}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                  placeholder="John"
+                  placeholder="Elise"
                 />
               </div>
 
@@ -128,7 +130,7 @@ export default function SignUpPage() {
                   value={formData.lastName}
                   onChange={handleChange}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                  placeholder="Doe"
+                  placeholder="Zamora"
                 />
               </div>
             </div>

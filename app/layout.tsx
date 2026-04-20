@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Capstone Project Manager',
-  description: 'A project management tool for capstone teams',
+  description: 'AI-powered study support for students',
 };
 
 export default function RootLayout({

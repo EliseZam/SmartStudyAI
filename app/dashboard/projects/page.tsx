@@ -85,7 +85,7 @@ export default function ProjectsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Projects</h1>
-          <p className="mt-1 text-gray-600">Manage your capstone projects</p>
+          <p className="mt-1 text-gray-600">Manage your study plans</p>
         </div>
         <button
           onClick={() => setShowModal(true)}
