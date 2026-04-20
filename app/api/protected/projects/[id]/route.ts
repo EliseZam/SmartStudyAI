@@ -7,7 +7,7 @@ interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
-// GET - Fetch a single project by ID
+// GET - Fetch one project (mapped to StudyPlan)
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const session = await getServerSession(authOptions);
@@ -19,71 +19,16 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const { id } = await params;
     const userId = session.user.id;
 
-    const project = await prisma.project.findFirst({
+    const project = await prisma.studyPlan.findFirst({
       where: {
         id,
-        OR: [
-          { ownerId: userId },
-          { members: { some: { userId } } },
-        ],
-      },
-      include: {
-        owner: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            email: true,
-            image: true,
-          },
-        },
-        members: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                firstName: true,
-                lastName: true,
-                email: true,
-                image: true,
-              },
-            },
-          },
-        },
-        tasks: {
-          include: {
-            assignee: {
-              select: {
-                id: true,
-                firstName: true,
-                lastName: true,
-                image: true,
-              },
-            },
-            _count: {
-              select: { comments: true },
-            },
-          },
-          orderBy: [
-            { status: 'asc' },
-            { priority: 'desc' },
-            { createdAt: 'desc' },
-          ],
-        },
-        milestones: {
-          include: {
-            _count: {
-              select: { tasks: true },
-            },
-          },
-          orderBy: { dueDate: 'asc' },
-        },
+        studentId: userId,
       },
     });
 
     if (!project) {
       return NextResponse.json(
-        { message: 'Project not found or access denied' },
+        { message: 'Project not found' },
         { status: 404 }
       );
     }
@@ -98,7 +43,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-// PUT - Update a project
+// PUT - Update one project (mapped to StudyPlan)
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
     const session = await getServerSession(authOptions);
@@ -110,32 +55,30 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     const { id } = await params;
     const userId = session.user.id;
     const body = await request.json();
-    const { name, description, status, startDate, endDate } = body;
 
-    // Check if user has permission (owner or member with appropriate role)
-    const membership = await prisma.teamMember.findFirst({
+    const { name, description, endDate, progress } = body;
+
+    const existingProject = await prisma.studyPlan.findFirst({
       where: {
-        projectId: id,
-        userId,
-        role: { in: ['OWNER', 'MEMBER'] },
+        id,
+        studentId: userId,
       },
     });
 
-    if (!membership) {
+    if (!existingProject) {
       return NextResponse.json(
-        { message: 'You do not have permission to update this project' },
-        { status: 403 }
+        { message: 'Project not found' },
+        { status: 404 }
       );
     }
 
-    const project = await prisma.project.update({
+    const project = await prisma.studyPlan.update({
       where: { id },
       data: {
-        ...(name && { name: name.trim() }),
-        ...(description !== undefined && { description: description?.trim() || null }),
-        ...(status && { status }),
-        ...(startDate !== undefined && { startDate: startDate ? new Date(startDate) : null }),
-        ...(endDate !== undefined && { endDate: endDate ? new Date(endDate) : null }),
+        ...(name !== undefined && { title: name.trim() }),
+        ...(description !== undefined && { goal: description?.trim() || 'No description provided' }),
+        ...(endDate !== undefined && { deadline: endDate ? new Date(endDate) : existingProject.deadline }),
+        ...(progress !== undefined && { progress: Number(progress) }),
       },
     });
 
@@ -149,7 +92,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-// DELETE - Delete a project
+// DELETE - Delete one project (mapped to StudyPlan)
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
     const session = await getServerSession(authOptions);
@@ -161,19 +104,23 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     const { id } = await params;
     const userId = session.user.id;
 
-    // Only project owner can delete
-    const project = await prisma.project.findFirst({
-      where: { id, ownerId: userId },
+    const existingProject = await prisma.studyPlan.findFirst({
+      where: {
+        id,
+        studentId: userId,
+      },
     });
 
-    if (!project) {
+    if (!existingProject) {
       return NextResponse.json(
-        { message: 'Project not found or you are not the owner' },
-        { status: 403 }
+        { message: 'Project not found' },
+        { status: 404 }
       );
     }
 
-    await prisma.project.delete({ where: { id } });
+    await prisma.studyPlan.delete({
+      where: { id },
+    });
 
     return NextResponse.json({ message: 'Project deleted successfully' });
   } catch (error) {

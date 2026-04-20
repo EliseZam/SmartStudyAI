@@ -1,0 +1,92 @@
+
+> capstone-project-manager@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.14
+  - Environments: .env
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/16) ...
+TEST WELCOME EMAIL RESULT: {
+  "data": {
+    "id": "2ede965f-1845-43f8-bca8-6e08d3de2e6b"
+  },
+  "error": null,
+  "headers": {
+    "cf-cache-status": "DYNAMIC",
+    "cf-ray": "9eedd5d5cec6ec7b-ADL",
+    "connection": "keep-alive",
+    "content-length": "45",
+    "content-type": "application/json",
+    "date": "Sun, 19 Apr 2026 18:05:05 GMT",
+    "ratelimit-limit": "5",
+    "ratelimit-policy": "5;w=1",
+    "ratelimit-remaining": "4",
+    "ratelimit-reset": "1",
+    "server": "cloudflare",
+    "x-resend-daily-quota": "1",
+    "x-resend-monthly-quota": "1"
+  }
+}
+TEST RESET EMAIL RESULT: {
+  "data": {
+    "id": "60f9adba-855e-4397-bc79-92dd99d27e6c"
+  },
+  "error": null,
+  "headers": {
+    "cf-cache-status": "DYNAMIC",
+    "cf-ray": "9eedfafd4e04ed7b-ADL",
+    "connection": "keep-alive",
+    "content-length": "45",
+    "content-type": "application/json",
+    "date": "Sun, 19 Apr 2026 18:30:27 GMT",
+    "ratelimit-limit": "5",
+    "ratelimit-policy": "5;w=1",
+    "ratelimit-remaining": "4",
+    "ratelimit-reset": "1",
+    "server": "cloudflare",
+    "x-resend-daily-quota": "2",
+    "x-resend-monthly-quota": "2"
+  }
+}
+   Generating static pages (4/16) 
+   Generating static pages (8/16) 
+   Generating static pages (12/16) 
+ ✓ Generating static pages (16/16)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    175 B          94.1 kB
+├ ○ /_not-found                          875 B          88.1 kB
+├ ƒ /api/auth/[...nextauth]              0 B                0 B
+├ ƒ /api/auth/signup                     0 B                0 B
+├ ƒ /api/protected/projects              0 B                0 B
+├ ƒ /api/protected/projects/[id]         0 B                0 B
+├ ƒ /api/protected/tasks                 0 B                0 B
+├ ƒ /api/protected/tasks/[id]            0 B                0 B
+├ ƒ /api/protected/user                  0 B                0 B
+├ ○ /api/test-reset-email                0 B                0 B
+├ ○ /api/test-welcome-email              0 B                0 B
+├ ○ /auth/error                          1.15 kB        95.1 kB
+├ ○ /auth/signin                         1.55 kB         105 kB
+├ ○ /auth/signup                         1.76 kB        95.7 kB
+├ ○ /dashboard                           1.65 kB         105 kB
+├ ○ /dashboard/profile                   1.99 kB        98.9 kB
+├ ○ /dashboard/projects                  2.12 kB        96.1 kB
+├ ƒ /dashboard/projects/[id]             2.9 kB         96.9 kB
+└ ○ /dashboard/tasks                     1.96 kB        95.9 kB
++ First Load JS shared by all            87.2 kB
+  ├ chunks/117-73d505df70a2191f.js       31.6 kB
+  ├ chunks/fd9d1056-8a4ce9f678d40efd.js  53.7 kB
+  └ other shared chunks (total)          1.94 kB
+
+
+ƒ Middleware                             49 kB
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

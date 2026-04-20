@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions';
 import prisma from '@/prisma/client';
 
-// GET - Fetch all projects for the current user
+// GET - Fetch all projects (mapped to StudyPlans) for the signed-in user
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
@@ -14,45 +14,13 @@ export async function GET() {
 
     const userId = session.user.id;
 
-    // Fetch projects where user is either owner or team member
-    const projects = await prisma.project.findMany({
+    const projects = await prisma.studyPlan.findMany({
       where: {
-        OR: [
-          { ownerId: userId },
-          { members: { some: { userId } } },
-        ],
+        studentId: userId,
       },
-      include: {
-        owner: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            email: true,
-            image: true,
-          },
-        },
-        members: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                firstName: true,
-                lastName: true,
-                email: true,
-                image: true,
-              },
-            },
-          },
-        },
-        _count: {
-          select: {
-            tasks: true,
-            milestones: true,
-          },
-        },
+      orderBy: {
+        createdAt: 'desc',
       },
-      orderBy: { updatedAt: 'desc' },
     });
 
     return NextResponse.json(projects);
@@ -65,7 +33,7 @@ export async function GET() {
   }
 }
 
-// POST - Create a new project
+// POST - Create a new project (mapped to StudyPlan)
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -76,37 +44,24 @@ export async function POST(request: NextRequest) {
 
     const userId = session.user.id;
     const body = await request.json();
-    const { name, description, startDate, endDate } = body;
 
-    if (!name || name.trim().length === 0) {
+    const { name, description, endDate } = body;
+
+    if (!name || !name.trim()) {
       return NextResponse.json(
         { message: 'Project name is required' },
         { status: 400 }
       );
     }
 
-    // Create project and add owner as team member in a transaction
-    const project = await prisma.$transaction(async (tx) => {
-      const newProject = await tx.project.create({
-        data: {
-          name: name.trim(),
-          description: description?.trim() || null,
-          startDate: startDate ? new Date(startDate) : null,
-          endDate: endDate ? new Date(endDate) : null,
-          ownerId: userId,
-        },
-      });
-
-      // Add owner as team member with OWNER role
-      await tx.teamMember.create({
-        data: {
-          projectId: newProject.id,
-          userId,
-          role: 'OWNER',
-        },
-      });
-
-      return newProject;
+    const project = await prisma.studyPlan.create({
+      data: {
+        title: name.trim(),
+        goal: description?.trim() || 'No description provided',
+        deadline: endDate ? new Date(endDate) : new Date(),
+        progress: 0,
+        studentId: userId,
+      },
     });
 
     return NextResponse.json(project, { status: 201 });

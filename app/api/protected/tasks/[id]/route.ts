@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions';
-import prisma from '@/prisma/client';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
-// GET - Fetch a single task by ID
+// GET - No task detail model exists in the current schema
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const session = await getServerSession(authOptions);
@@ -17,66 +16,11 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     }
 
     const { id } = await params;
-    const userId = session.user.id;
 
-    const task = await prisma.task.findFirst({
-      where: {
-        id,
-        project: {
-          OR: [
-            { ownerId: userId },
-            { members: { some: { userId } } },
-          ],
-        },
-      },
-      include: {
-        assignee: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            email: true,
-            image: true,
-          },
-        },
-        creator: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-          },
-        },
-        project: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        milestone: true,
-        comments: {
-          include: {
-            author: {
-              select: {
-                id: true,
-                firstName: true,
-                lastName: true,
-                image: true,
-              },
-            },
-          },
-          orderBy: { createdAt: 'asc' },
-        },
-      },
-    });
-
-    if (!task) {
-      return NextResponse.json(
-        { message: 'Task not found or access denied' },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json(task);
+    return NextResponse.json(
+      { message: `Task ${id} not found in this version of SmartStudy AI.` },
+      { status: 404 }
+    );
   } catch (error) {
     console.error('Error fetching task:', error);
     return NextResponse.json(
@@ -86,7 +30,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-// PUT - Update a task
+// PUT - Placeholder until tasks are added to the Prisma schema
 export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
     const session = await getServerSession(authOptions);
@@ -96,71 +40,11 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     }
 
     const { id } = await params;
-    const userId = session.user.id;
-    const body = await request.json();
-    const { title, description, status, priority, assigneeId, dueDate, milestoneId } = body;
 
-    // Verify task exists and user has access
-    const existingTask = await prisma.task.findFirst({
-      where: {
-        id,
-        project: {
-          OR: [
-            { ownerId: userId },
-            { members: { some: { userId } } },
-          ],
-        },
-      },
-      include: {
-        project: true,
-      },
-    });
-
-    if (!existingTask) {
-      return NextResponse.json(
-        { message: 'Task not found or access denied' },
-        { status: 404 }
-      );
-    }
-
-    // If assignee is being changed, verify they are a project member
-    if (assigneeId !== undefined && assigneeId !== null) {
-      const assigneeMembership = await prisma.teamMember.findFirst({
-        where: { projectId: existingTask.projectId, userId: assigneeId },
-      });
-
-      if (!assigneeMembership) {
-        return NextResponse.json(
-          { message: 'Assignee is not a member of this project' },
-          { status: 400 }
-        );
-      }
-    }
-
-    const task = await prisma.task.update({
-      where: { id },
-      data: {
-        ...(title && { title: title.trim() }),
-        ...(description !== undefined && { description: description?.trim() || null }),
-        ...(status && { status }),
-        ...(priority && { priority }),
-        ...(assigneeId !== undefined && { assigneeId: assigneeId || null }),
-        ...(dueDate !== undefined && { dueDate: dueDate ? new Date(dueDate) : null }),
-        ...(milestoneId !== undefined && { milestoneId: milestoneId || null }),
-      },
-      include: {
-        assignee: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            image: true,
-          },
-        },
-      },
-    });
-
-    return NextResponse.json(task);
+    return NextResponse.json(
+      { message: `Task updates are not enabled for ${id} in this version of SmartStudy AI yet.` },
+      { status: 501 }
+    );
   } catch (error) {
     console.error('Error updating task:', error);
     return NextResponse.json(
@@ -170,7 +54,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-// DELETE - Delete a task
+// DELETE - Placeholder until tasks are added to the Prisma schema
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
     const session = await getServerSession(authOptions);
@@ -180,31 +64,11 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     }
 
     const { id } = await params;
-    const userId = session.user.id;
 
-    // Verify task exists and user has access
-    const task = await prisma.task.findFirst({
-      where: {
-        id,
-        project: {
-          OR: [
-            { ownerId: userId },
-            { members: { some: { userId, role: { in: ['OWNER', 'MEMBER'] } } } },
-          ],
-        },
-      },
-    });
-
-    if (!task) {
-      return NextResponse.json(
-        { message: 'Task not found or access denied' },
-        { status: 404 }
-      );
-    }
-
-    await prisma.task.delete({ where: { id } });
-
-    return NextResponse.json({ message: 'Task deleted successfully' });
+    return NextResponse.json(
+      { message: `Task deletion is not enabled for ${id} in this version of SmartStudy AI yet.` },
+      { status: 501 }
+    );
   } catch (error) {
     console.error('Error deleting task:', error);
     return NextResponse.json(
