@@ -2,11 +2,12 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/app/contexts/AuthProvider';
+import GoogleAnalytics from '@/app/components/GoogleAnalytics';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Capstone Project Manager',
+  title: 'SmartStudy AI',
   description: 'AI-powered study support for students',
 };
 
@@ -21,6 +22,7 @@ export default function RootLayout({
         <AuthProvider>
           {children}
         </AuthProvider>
+              <GoogleAnalytics />
       </body>
     </html>
   );
