@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/app/contexts/AuthProvider';
 import GoogleAnalytics from '@/app/components/GoogleAnalytics';
+import SiteFooter from '@/app/components/SiteFooter';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,6 +24,7 @@ export default function RootLayout({
           {children}
         </AuthProvider>
               <GoogleAnalytics />
+              <SiteFooter />
       </body>
     </html>
   );
